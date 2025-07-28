@@ -4,14 +4,13 @@ import numpy as np
 from streamlit_gsheets import GSheetsConnection
 
 # st.cache_resource.clear()
-# st.cache_data.clear()
+st.cache_data.clear()
 conn = st.connection("gsheets", type=GSheetsConnection)
 star_point = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/131DjAiFO7f-hPTJX9rN8SksNL53z_UGOjh9ScmL-eKM/edit?gid=0#gid=0", worksheet='estrelas')
 players = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/131DjAiFO7f-hPTJX9rN8SksNL53z_UGOjh9ScmL-eKM/edit?gid=0#gid=0", worksheet='craques_mensalistas')
 
 players_list = players.loc[players['status']=='ATIVO']['nome_do_craque'].to_list()
-# dats = dats.dropna(how="all")
-
+voted_list = star_point['quem_votou'].to_list()
 
 st.set_page_config(page_title="Balanceador de Times", layout="wide")
 st.title("VOTAÇÃO DE ESTRELAS")
@@ -38,7 +37,10 @@ with form:
             try:
                 k = k.container(border=True)
                 k.title(players_list[i])
-                k.image('main_code/fotos_craques/Mister.png', width=100)
+                try:
+                    k.image(f'main_code/fotos_craques/{players_list[i]}.png', width=100)
+                except:
+                    k.image('main_code/fotos_craques/Mister.png', width=100)
                 k.checkbox('NÃO CONHEÇO', key=f'nc{players_list[i]}')
                 k.write('Habilidade: Controle de bola, Passe, Chute, Drible, Domínio.')
                 k.feedback('stars', key = f'hab{players_list[i]}')
@@ -85,7 +87,11 @@ with form:
 
         elif None in value_list:
             st.error('VOCÊ ESQUECEU DE DAR ALGUMA ESTRELA PARA ALGUÉM')
+
+        elif input_name in voted_list:
+            st.error('VOCÊ JÁ VOTOU SEU BURRO! OU COLOCOU O NOME ERRADO SEU BURRO!')
         else:
             df = pd.DataFrame([dict(zip(columns, value_list))])
-            conn.update(worksheet='estrelas', data = df)
+            subs = pd.concat([star_point, df], ignore_index=False)
+            conn.update(worksheet='estrelas', data = subs)
             st.success('FEZ UMA PRA DEUS!')
