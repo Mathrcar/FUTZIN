@@ -29,8 +29,8 @@ with form:
     
     st.write('ATENÇÃO: ESSE FORMS NÃO SALVA SUAS RESPOSTAS, ENTÃO VALIDE SE NÃO DEIXOU PASSAR NADA! SE VOCÊ DEIXOU DE PREENCHER UM CAMPO E SUBMETER, IRÁ TER QUE RESPONDER TUDO NOVAMENTE SEU BURRO!')
 
-    # while i < len(players_list):
-    while i < 3:
+    while i < len(players_list):
+    # while i < 3:
 
         left, mid, right = st.columns(3)
 
@@ -38,16 +38,16 @@ with form:
             try:
                 k = k.container(border=True)
                 k.title(players_list[i])
-                k.image('futzin/fotos_craques/Mister.png', width=100)
-                ncl = k.checkbox('NÃO CONHEÇO', key=f'nc{players_list[i]}')
+                k.image('main_code/fotos_craques/Mister.png', width=100)
+                k.checkbox('NÃO CONHEÇO', key=f'nc{players_list[i]}')
                 k.write('Habilidade: Controle de bola, Passe, Chute, Drible, Domínio.')
-                hab = k.feedback('stars', key = f'hab{players_list[i]}')
+                k.feedback('stars', key = f'hab{players_list[i]}')
                 k.write('Eficácia Ofensiva: Gols, Assistências, Tomada de decisão, Criação de espaço nas jogadas.')
-                atq = k.feedback('stars', key = f'atq{players_list[i]}')
+                k.feedback('stars', key = f'atq{players_list[i]}')
                 k.write('Eficácia Defensiva: Marcação, Desarmes, Trabalho em equipe.')
-                dfs = k.feedback('stars', key = f'dfs{players_list[i]}')
+                k.feedback('stars', key = f'dfs{players_list[i]}')
                 k.write('Desempenho Físico: Velocidade, Resistência, Força, Agilidade.')
-                cod = k.feedback('stars', key = f'cod{players_list[i]}')
+                k.feedback('stars', key = f'cod{players_list[i]}')
                 i = i+1
             except:
                 i = i+1
@@ -56,8 +56,8 @@ with form:
     i = 0
     value_list = [input_name]
     columns = ['quem_votou']
-    # while i < len(players_list):
-    while i < 3:
+    while i < len(players_list):
+    # while i < 3:
         if st.session_state[f'nc{players_list[i]}'] == True:
             value_list.append('nao conhece')
             value_list.append('nao conhece')
