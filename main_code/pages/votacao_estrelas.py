@@ -78,6 +78,8 @@ with form:
 
         i = i+1 
 
+    value_list = [item + 1 if isinstance(item, (int, float)) else item for item in value_list]
+
 
     submit = form.form_submit_button("LANÇA MEU VOTO AÍ!")
 
@@ -89,9 +91,10 @@ with form:
             st.error('VOCÊ ESQUECEU DE DAR ALGUMA ESTRELA PARA ALGUÉM')
 
         elif input_name in voted_list:
-            st.error('VOCÊ JÁ VOTOU SEU BURRO! OU COLOCOU O NOME ERRADO SEU BURRO!')
+            st.error('VOCÊ JÁ VOTOU SEU PILANTRA! OU COLOCOU O NOME ERRADO SEU BURRO!')
         else:
             df = pd.DataFrame([dict(zip(columns, value_list))])
-            subs = pd.concat([star_point, df], ignore_index=False)
-            conn.update(worksheet='estrelas', data = subs)
+            voted_df = pd.concat([star_point, df], ignore_index=False)
+            conn.update(worksheet='estrelas', data = voted_df)
+
             st.success('FEZ UMA PRA DEUS!')
