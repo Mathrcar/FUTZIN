@@ -28,8 +28,8 @@ with form:
     
     st.write('ATENÇÃO: ESSE FORMS NÃO SALVA SUAS RESPOSTAS, ENTÃO VALIDE SE NÃO DEIXOU PASSAR NADA! SE VOCÊ DEIXOU DE PREENCHER UM CAMPO E SUBMETER, IRÁ TER QUE RESPONDER TUDO NOVAMENTE SEU BURRO!')
 
-    while i < len(players_list):
-    # while i < 3:
+    # while i < len(players_list):
+    while   i < 3:
 
         left, mid, right = st.columns(3)
 
@@ -58,8 +58,8 @@ with form:
     i = 0
     value_list = [input_name]
     columns = ['quem_votou']
-    while i < len(players_list):
-    # while i < 3:
+    # while i < len(players_list):
+    while i < 3:
         if st.session_state[f'nc{players_list[i]}'] == True:
             value_list.append('nao conhece')
             value_list.append('nao conhece')
