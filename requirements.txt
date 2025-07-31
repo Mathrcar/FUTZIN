@@ -3,3 +3,5 @@ numpy
 streamlit
 st-gsheets-connection
 scikit-learn
+ortools
+functions
