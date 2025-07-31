@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from streamlit_gsheets import GSheetsConnection
 from functions.futzin_funcs import atualizar_estrelas,sortear_times
+import datetime
 
 
 st.cache_resource.clear()
@@ -10,6 +11,8 @@ st.cache_data.clear()
 conn = st.connection("gsheets", type=GSheetsConnection)
 players = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/131DjAiFO7f-hPTJX9rN8SksNL53z_UGOjh9ScmL-eKM/edit?gid=0#gid=0", worksheet='craques_mensalistas')
 players_list = players.loc[players['status']=='ATIVO']['nome_do_craque'].to_list()
+hist_times = conn.read(spreadsheet="https://docs.google.com/spreadsheets/d/131DjAiFO7f-hPTJX9rN8SksNL53z_UGOjh9ScmL-eKM/edit?gid=0#gid=0", worksheet='historico_times')
+
 
 att = st.button('ATUALIZAR ESTRELAS', type='primary')
 
@@ -47,26 +50,34 @@ with form:
             df = df.loc[df['craque'].isin(play_today)][['craque', 'nota_final']]
     
             df_aux = ''
-
+            players = ''
             if away!='':
 
                 linhas = away.split('\n')
                 dados = [linha.split('-') for linha in linhas]
                 df_aux = pd.DataFrame(dados, columns=['craque', 'nota_final'])
-                df_aux['nota_final'] = df_aux['nota_final']
+                df_aux['nota_final'] = df_aux['nota_final'].astype(int)
                 players = pd.concat([df_aux, df], ignore_index=False)
 
             else:
                 players = df
 
-            st.dataframe(players)
+            times = sortear_times(players, num_times=qtt_times, max_por_time=qtt_players)
+            times['dia_do_jogo'] = datetime.datetime.now().strftime('%Y-%m-%d')
+            
+            hist_times_new = pd.concat([hist_times, times], ignore_index=False)
 
-            times = sortear_times(df, num_times=qtt_times, max_por_time=qtt_players)
+            conn.update(worksheet='historico_times', data = hist_times_new)
 
-            for time in range(0, len(times)):
-                st.write(f'JOGADORES DO TIME {time+1}')
+            times_list = set(times['time'].to_list())
 
-                for jogador in times[time]:
-                    st.write(jogador)
-
-
+            for t in times_list:
+                taux = times.loc[times['time']==t]
+                st.title(t)
+                col = st.columns(taux.shape[0])
+                for i in range(0, taux.shape[0]):
+                    try:
+                        col[i].image(f'main_code/fotos_craques/{taux["craque"].iloc[i]}.png', width=100)
+                    except:
+                        col[i].image('main_code/fotos_craques/Mister.png', width=100)
+                    col[i].write(f'{taux["craque"].iloc[i]} - {int(taux["nota_final"].iloc[i])}')

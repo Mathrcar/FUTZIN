@@ -84,12 +84,17 @@ def sortear_times(df, num_times=3, max_por_time=7):
     status = solver.Solve(model)
 
     if status in [cp_model.OPTIMAL, cp_model.FEASIBLE]:
-        times = [[] for _ in range(num_times)]
+        dados = []
         for i in range(n):
             for t in range(num_times):
                 if solver.Value(x[i][t]) == 1:
-                    times[t].append((nomes[i], pontuacoes[i]))
-        return times
+                    dados.append({
+                        'craque': nomes[i],
+                        'nota_final': pontuacoes[i],
+                        'time': f'Time {t + 1}'
+                    })
+        df_resultado = pd.DataFrame(dados)
+        return df_resultado
     else:
         print("❌ Não foi possível encontrar uma solução viável.")
         return None

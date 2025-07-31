@@ -54,7 +54,9 @@ with form:
             except:
                 i = i+1
                 pass
-
+    
+    if st.session_state[f'habAlex'] ==2:
+        st.write('teste')
     i = 0
     value_list = [input_name]
     columns = ['quem_votou']
