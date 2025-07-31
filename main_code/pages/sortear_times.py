@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from streamlit_gsheets import GSheetsConnection
-from functions.futzin_funcs import atualizar_estrelas,sortear_times
+from utils.futzin_funcs import atualizar_estrelas,sortear_times
 import datetime
 
 
